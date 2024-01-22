@@ -20,7 +20,8 @@ MERAAN is a cutting-edge platform at the intersection of Laravel, React, and Gra
 
 Our platform revolves around the belief that the most enriching experiences arise from shared recommendations. Within our vibrant community, individuals passionately contribute event reviews and captivating photos, empowering others to discover their ideal races.
 
-   - Technologies Used: PHP/laravel , ReacJs, SqlDB , Graphql , Docker 
+   - Technologies Used: PHP/laravel , ReacJs, SqlDB , Graphql , Docker
+   - Url https://meraan.com/
 
 2. **Project Name 2:**
    - Description: Brief overview of the project.
