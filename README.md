@@ -14,7 +14,7 @@ This repository includes samples of code and files derived from different projec
 
 ## Projects Overview
 
-1. **Project Name 1:Meraan.com **
+1.  **Merran.com:**
    - Description: 
 MERAAN is a cutting-edge platform at the intersection of Laravel, React, and GraphQL. Born out of the founder's firsthand challenges in navigating and engaging with athletic events, MERAAN aims to streamline the process of discovering and participating in races.
 
