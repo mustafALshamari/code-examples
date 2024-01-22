@@ -14,9 +14,13 @@ This repository includes samples of code and files derived from different projec
 
 ## Projects Overview
 
-1. **Project Name 1:**
-   - Description: Brief overview of the project.
-   - Technologies Used: List of technologies and programming languages involved.
+1. **Project Name 1:Meraan.com
+   - Description: 
+MERAAN is a cutting-edge platform at the intersection of Laravel, React, and GraphQL. Born out of the founder's firsthand challenges in navigating and engaging with athletic events, MERAAN aims to streamline the process of discovering and participating in races.
+
+Our platform revolves around the belief that the most enriching experiences arise from shared recommendations. Within our vibrant community, individuals passionately contribute event reviews and captivating photos, empowering others to discover their ideal races.
+
+   - Technologies Used: PHP/laravel , ReacJs, SqlDB , Graphql , Docker 
 
 2. **Project Name 2:**
    - Description: Brief overview of the project.
