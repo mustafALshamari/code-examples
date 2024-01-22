@@ -15,6 +15,7 @@ This repository includes samples of code and files derived from different projec
 ## Projects Overview
 
 1.  **Merran.com:**
+    **Dvelopment Year :2021**
    - Description: 
 MERAAN is a cutting-edge platform at the intersection of Laravel, React, and GraphQL. Born out of the founder's firsthand challenges in navigating and engaging with athletic events, MERAAN aims to streamline the process of discovering and participating in races.
 
@@ -25,11 +26,14 @@ Our platform revolves around the belief that the most enriching experiences aris
    - repo: https://github.com/mustafALshamari/code-examples/tree/main/meraan.com
 
 2. **Content-Hub:**
+   **Dvelopment Year :2022, 2023, 2024**
    - Description: Content-hub serves as a central hub connecting multiple services and offering APIs to construct XML books for the Code Standards-Building and Safety             domain. Utilizing the Content-api streamlines the process, making it easier for authors to update Code Standard books and providing the flexibility to modify content          efficiently.
    - Technologies Used: NodeJs, ExpressJs , ReactJs, Docker , Microservices , Prisma, CI/CD, Jenkins , AWS buckets, Postgre , OpenAPI
    - repo : https://github.com/mustafALshamari/code-examples/tree/main/content-hub
 
-3. **Horsley.cloud:**
+4. **Horsley.cloud:**
+   **Dvelopment Year :2022, 2023**
+
    - Description: Horsley.cloud : Horsley.cloud is an advanced trading tool designed for Binance cryptocurrency trading. This automated system empowers experts by allowing them to set specific parameters, such as the amount available in their Binance account, desired trading amounts, and algorithm preferences. Once configured, the tool autonomously executes buy and sell orders, optimizing for profit. Additionally, it provides real-time monitoring of the selected currency's current market price. The backend has been entirely developed by Me, and certain aspects of the frontend have been implemented by Me.
    - Technologies Used: NodeJs, ExpressJs , ReactJs, Docker , firebase (firestone, real time DB and Auth) binance sockets and js lib 
    - repo :https://github.com/mustafALshamari/code-examples/tree/main/horsley
