@@ -1,0 +1,111 @@
+input LoginInput {
+    username: String!
+    password: String!
+}
+
+input RefreshTokenInput {
+    refresh_token: String
+}
+
+type AuthPayload {
+    access_token: String!
+    refresh_token: String!
+    expires_in: Int
+    token_type: String
+    user: User
+}
+
+type RefreshTokenPayload {
+    access_token: String!
+    refresh_token: String!
+    expires_in: Int!
+    token_type: String!
+}
+
+type LogoutResponse {
+    status: String!
+    message: String
+}
+
+type ForgotPasswordResponse {
+    status: String!
+    message: String
+}
+
+type RegisterResponse {
+    tokens: String
+    status: String
+}
+
+type RegisterUserResponse {
+    user: User
+    status: String
+}
+
+type RegisterOrganizerResponse {
+    user: User
+    status: String
+}
+
+type UpdatePasswordResponse {
+    status: String!
+    message: String!
+}
+
+enum RegisterStatuses {
+    MUST_VERIFY_EMAIL
+    SUCCESS
+}
+
+input ForgotPasswordInput {
+    email: String! @rules(apply: ["required", "email"])
+}
+
+input NewPasswordWithCodeInput {
+    email: String! @rules(apply: ["required", "email"])
+    token: String! @rules(apply: ["required", "string"])
+    password: String! @rules(apply: ["required", "confirmed", "min:8"])
+    password_confirmation: String!
+}
+
+# input RegisterInput {
+#     name: String! @rules(apply: ["required", "string"])
+#     email: String! @rules(apply: ["required", "email", "unique:users,email"])
+#     password: String! @rules(apply: ["required", "confirmed", "min:8"])
+#     password_confirmation: String!
+# }
+
+input RegisterUserInput {
+    f_name: String! @rules(apply: ["required", "string"])
+    l_name: String! @rules(apply: ["required", "string"])
+    dob: String! @rules(apply: ["required", "string"])
+    gender: String! @rules(apply: ["required", "string"])
+    mobile: String! @rules(apply: ["required", "string"])
+    email: String! @rules(apply: ["required", "email", "unique:users,email"])
+    password: String! @rules(apply: ["required", "confirmed", "min:8"])
+    password_confirmation: String!
+}
+
+input RegisterOrganizerInput {
+    organizer: String! @rules(apply: ["required", "string"])
+    contact_person: String! @rules(apply: ["required", "string"])
+    mobile: String! @rules(apply: ["required", "string", "min:11"])
+    email: String! @rules(apply: ["required", "email", "unique:users,email"])
+    password: String! @rules(apply: ["required", "confirmed", "min:8"])
+    password_confirmation: String!
+}
+
+input SocialLoginInput {
+    provider: String! @rules(apply: ["required"])
+    token: String! @rules(apply: ["required"])
+}
+
+input VerifyEmailInput {
+    token: String!
+}
+
+input UpdatePassword {
+    old_password: String!
+    password: String! @rules(apply: ["required", "confirmed", "min:8"])
+    password_confirmation: String!
+}

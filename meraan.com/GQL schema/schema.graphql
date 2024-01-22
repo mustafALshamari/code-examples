@@ -1,0 +1,747 @@
+"A date string with format `Y-m-d`, e.g. `2011-05-23`."
+scalar Date @scalar(class: "Nuwave\\Lighthouse\\Schema\\Types\\Scalars\\Date")
+
+"A datetime string with format `Y-m-d H:i:s`, e.g. `2018-05-23 13:43:32`."
+scalar DateTime
+    @scalar(class: "Nuwave\\Lighthouse\\Schema\\Types\\Scalars\\DateTime")
+
+"Can be used as an argument to upload files using https://github.com/jaydenseric/graphql-multipart-request-spec"
+scalar Upload
+    @scalar(class: "Nuwave\\Lighthouse\\Schema\\Types\\Scalars\\Upload")
+
+type Query {
+    users: [User!] @all
+    activities: [Activity!] @all
+    user(id: ID @eq): User @find
+    event(id: ID @eq): Event @find
+    events(
+        orderBy: _ @orderBy(columns: ["created_at"])
+        where: _ @whereConditions(columns: ["status"])
+    ): [Event!]! @paginate
+
+    orders: [Order!] @all
+    event_search(input: EventSearchInput! @spread): [Event!]!
+        @paginate(
+            builder: "App\\GraphQL\\Queries\\EventQuery@mainSiteFilterEvent"
+        )
+
+    discountCheck(code: String): DiscountCheckResponse
+        @field(resolver: "DiscountQuery@discountCheck")
+}
+
+extend type Query @guard(with: ["api"]) {
+    getAuthUserInfo: User @field(resolver: "UserQuery@userInfo")
+    listMyEvents(status: EventStatusEnum!): [Event]
+        @field(resolver: "UserEventQuery@listMyEvent")
+}
+
+extend type Query {
+    listUsers(input: UserListInput @spread): [User]
+        @field(resolver: "Admin\\ListingUserQuery@listUsers")
+
+    listOrders(input: OrderListInput @spread): [Order]
+        @field(resolver: "Admin\\ListOrderQuery@listOrders")
+}
+
+type Mutation {
+    # routes for Registration , password , auth
+    registerUser(input: RegisterUserInput! @spread): RegisterUserResponse!
+        @field(resolver: "UserMutator@create")
+    registerOrganizer(
+        input: RegisterOrganizerInput! @spread
+    ): RegisterOrganizerResponse!
+        @field(resolver: "UserMutator@createOrganizer")
+
+    login(input: LoginInput @spread): AuthPayload!
+        @field(
+            resolver: "Joselfonseca\\LighthouseGraphQLPassport\\GraphQL\\Mutations\\Login@resolve"
+        )
+    refreshToken(input: RefreshTokenInput @spread): RefreshTokenPayload!
+        @field(
+            resolver: "Joselfonseca\\LighthouseGraphQLPassport\\GraphQL\\Mutations\\RefreshToken@resolve"
+        )
+    logout: LogoutResponse!
+        @field(
+            resolver: "Joselfonseca\\LighthouseGraphQLPassport\\GraphQL\\Mutations\\Logout@resolve"
+        )
+    forgotPassword(
+        input: ForgotPasswordInput! @spread
+    ): ForgotPasswordResponse!
+        @field(
+            resolver: "Joselfonseca\\LighthouseGraphQLPassport\\GraphQL\\Mutations\\ForgotPassword@resolve"
+        )
+    updateForgottenPassword(
+        input: NewPasswordWithCodeInput @spread
+    ): ForgotPasswordResponse!
+        @field(
+            resolver: "Joselfonseca\\LighthouseGraphQLPassport\\GraphQL\\Mutations\\ResetPassword@resolve"
+        )
+    # register(input: RegisterInput @spread): RegisterResponse! @field(resolver: "Joselfonseca\\LighthouseGraphQLPassport\\GraphQL\\Mutations\\Register@resolve")
+    socialLogin(input: SocialLoginInput! @spread): AuthPayload!
+        @field(
+            resolver: "Joselfonseca\\LighthouseGraphQLPassport\\GraphQL\\Mutations\\SocialLogin@resolve"
+        )
+    verifyEmail(input: VerifyEmailInput! @spread): AuthPayload!
+        @field(
+            resolver: "Joselfonseca\\LighthouseGraphQLPassport\\GraphQL\\Mutations\\VerifyEmail@resolve"
+        )
+    updatePassword(input: UpdatePassword! @spread): UpdatePasswordResponse!
+        @field(
+            resolver: "Joselfonseca\\LighthouseGraphQLPassport\\GraphQL\\Mutations\\UpdatePassword@resolve"
+        )
+        @guard(with: ["api"])
+}
+
+extend type Mutation @guard(with: ["api"]) {
+    updateCompany(input: CompanyInput @spread): CompanyResponse
+        @field(resolver: "CompanyMutator@storeCompanyProfile")
+}
+
+extend type Mutation @guard(with: ["api"]) {
+    createReview(input: ReviewInput @spread): ReviewResponse
+        @field(resolver: "ReviewMutator@createReview")
+    approveReview(input: ReviewApproveInput @spread): ReviewApproveResponse
+        @field(resolver: "ReviewMutator@approveReview")
+    replyReview(input: ReviewReplyInput @spread): ReviewResponse
+        @field(resolver: "ReviewMutator@replyReview")
+}
+
+extend type Mutation @guard(with: ["api"]) {
+    createEventStepOne(input: EventStep1Input @spread): EventStep1Response
+        @field(resolver: "EventMutator@createEventStepOne")
+    createEventCategoryStepTwo(
+        input: EventCategoryStep2Input @spread
+    ): EventCategoryStep2Response
+        @field(resolver: "EventMutator@createEventCategoryStepTwo")
+    createEventSponsorStepThree(
+        input: EventSponsorStep3Input @spread
+    ): EventSponsorStep3Response
+        @field(resolver: "EventMutator@createEventSponsorStepThree")
+    createEventDocumentStepFour(
+        input: EventDocumentStep4Input @spread
+    ): EventDocumentStep4Response
+        @field(resolver: "EventMutator@createEventDocumentStepFour")
+    createEventOrganizerContactStepFive(
+        input: EventOrganizerContactStep5Input @spread
+    ): EventOrganizerContactStep5Response
+        @field(resolver: "EventMutator@createEventOrganizerContactStepFive")
+    createEventQuestionsStepSix(
+        input: EventQuestionsStepSixInput @spread
+    ): EventQuestionsStepSixResponse
+        @field(resolver: "EventMutator@createEventQuestionsStepSix")
+    createEventDiscountStepSeven(
+        input: DiscountInput @spread
+    ): EventDiscountResponse
+        @field(resolver: "EventMutator@createEventDiscountStepSeven")
+    finalStepPublishEvent(
+        input: PublishEventInput @spread
+    ): PublishEventResponse
+        @field(resolver: "EventMutator@finalStepPublishEvent")
+}
+extend type Mutation @guard(with: ["api"]) {
+    makeOrder(input: OrderInput @spread): OrderResponse
+        @field(resolver: "OrderMutator@makeOrder")
+}
+
+extend type Mutation @guard(with: ["api"]) {
+    updateAthleteAccount(
+        input: AthleteAccountInput @spread
+    ): AthleteAccountResponse
+        @field(resolver: "UserProfileMutator@storeUserProfile")
+    storeEmergencyInfo(input: EmergencyInput @spread): AthleteAccountResponse
+        @field(resolver: "UserProfileMutator@storeEmergencyInfo")
+    storeWallet(input: WalletInput @spread): AthleteAccountResponse
+        @field(resolver: "WalletMutator@storeWallet")
+}
+
+type User {
+    id: ID
+    first_name: String
+    last_name: String
+    organizer_name: String
+    contact_person: String
+    dob: String
+    gender: String
+    mobile: String
+    avatar: String
+    company: Company @hasOne(relation: "company")
+    profile: Profile @hasOne(relation: "profile")
+    emergency: Emergency @hasOne(relation: "emergency")
+    wallet: Wallet @hasOne(relation: "wallet")
+    order: [Order] @hasMany(relation: "orders")
+    email: String
+    email_verified_at: DateTime
+    remember_token: String
+    created_at: DateTime
+    updated_at: DateTime
+}
+
+type Company {
+    id: ID
+    address: String
+    email: String
+    logo: String
+    iban: String
+    created_at: DateTime
+    updated_at: DateTime
+}
+
+input EventSearchInput {
+    event_name: String
+    address: String
+    start_date: String
+    status: Boolean
+    activity_id: ID
+}
+
+type Activity {
+    id: ID
+    name: String
+}
+
+type Country {
+    id: ID
+    name: String
+}
+
+type City {
+    id: ID
+    name: String
+}
+
+type Zip {
+    id: ID
+    name: String
+}
+
+type Event {
+    id: ID
+    event_images: [EventMedia] @hasMany(relation: "eventsImages")
+    event_name: String!
+    event_activity: Activity @belongsTo(relation: "eventActivity")
+    intro: String!
+    event_date: DateTime
+    rating: String
+    start: DateTime
+    ends: DateTime
+    address: String
+    longitude: String
+    latitude: String
+    sold_ticket: String
+    revenue: String
+    country: String
+    services: [Service] @belongsToMany(relation: "eventServices")
+    includes: [Including] @belongsToMany(relation: "eventIncluding")
+    event_category: [EventCategory] @hasMany(relation: "eventCategory")
+    company: Company @belongsTo(relation: "eventCompany")
+    faq: [EventFaq] @hasMany(relation: "eventFaq")
+    event_organizer_img: [EventMedia] @hasMany(relation: "eventsOrganizerImg")
+    organizer_contact: OrganizerContact
+        @hasOne(relation: "eventContactOrganizer")
+    event_document: [EventMedia] @hasMany(relation: "eventsDocument")
+    event_sponsor_img: [EventMedia] @hasMany(relation: "eventsSponsorImg")
+    review(limit: Int @limit): [Review] @hasMany(relation: "eventReview")
+    created_at: DateTime
+    updated_at: DateTime
+}
+
+type Activity {
+    id: ID
+    name: String
+    type_id: ID
+}
+
+type EventMedia {
+    id: ID
+    url: String
+    file_name: String
+    file_size: String
+    type_id: ID
+    event_id: ID
+    created_at: DateTime
+    updated_at: DateTime
+}
+
+type EventCategory {
+    id: ID
+    name: String
+    distance: String
+    fees: String
+    img_url: String
+    address: String
+    age_from: String
+    age_to: String
+    finish_address: String
+    cat_start: DateTime
+    cat_end: DateTime
+    longitude_start: String
+    latitude_start: String
+    longitude_finish: String
+    latitude_finish: String
+    sold_ticket: String
+    revenue: String
+    awards: [Award] @hasMany(relation: "eventAward")
+    participant: [Participant] @belongsToMany(relation: "participants")
+    bib_from: String
+    bib_to: String
+    created_at: DateTime
+    updated_at: DateTime
+}
+
+type Participant {
+    id: ID
+    name: String
+    type_id: ID
+}
+
+type Award {
+    id: ID
+    place: String
+    prize: ID
+    created_at: DateTime
+    updated_at: DateTime
+}
+type OrganizerContact {
+    id: ID
+    organizer_name: String
+    contact_name: String
+    phone: String
+    email: String
+    web_url: String
+    facebook: String
+    instagram: String
+    twitter: String
+    created_at: DateTime
+    updated_at: DateTime
+}
+
+type EventFaq {
+    id: ID
+    question: String
+    answer: String
+    event_id: ID
+    created_at: DateTime
+    updated_at: DateTime
+}
+
+type Including {
+    id: ID
+    name: String
+    type_id: ID
+}
+
+type Service {
+    id: ID
+    name: String
+}
+
+type Order {
+    id: ID
+    user: User @belongsTo(relation: "user")
+    status: String
+    transaction: Transaction @hasOne(relation: "transaction")
+    category_order: [CategoryOrder] @hasMany(relation: "categoryOrder")
+    quantity:String
+    total_price: String
+}
+
+type Discount {
+    id: ID
+    code: String
+    event_id: ID
+    discount: Int
+    status: String
+    limit: Int
+    counter: Int
+    valid_from: DateTime
+    valid_to: DateTime
+    created_at: DateTime
+    updated_at: DateTime
+}
+
+type Profile {
+    id: ID
+    city: String
+    nationality: String
+    residency: String
+    address: String
+    shirt_size: String
+    champion_chip: String
+    pro_chip: String
+    created_at: DateTime
+    updated_at: DateTime
+}
+
+type Emergency {
+    id: ID
+    first_name: String
+    last_name: String
+    email: String
+    mobile: String
+    medical_status: String
+    medical_description: String
+    user: User @belongsTo(relation: "user")
+    created_at: DateTime
+    updated_at: DateTime
+}
+
+type Wallet {
+    id: ID
+    card_number: String
+    last_name: String
+    cvc: String
+    first_name: String
+    last_name: String
+    country: String
+    city: String
+    address: String
+    user: User @belongsTo(relation: "wallet")
+    created_at: DateTime
+    updated_at: DateTime
+}
+
+type Transaction {
+    id: ID
+    transaction_id: String
+    created_at: DateTime
+    order: Order @belongsTo(relation: "order")
+}
+
+type CategoryOrder {
+    id: ID
+    user: Order @belongsTo(relation: "order")
+    event_name: String
+    currency: String
+    product: EventCategory @belongsTo(relation: "eventCategory")
+    ticket_number: String
+    gift: Boolean
+    qr_code: String
+    final_price: String
+    created_at:DateTime
+}
+
+input EventStep1Input {
+    event_id: ID @rules(apply: ["exists:events,id"])
+    event_name: String! @rules(apply: ["required", "min:5", "max:255"])
+    intro: String! @rules(apply: ["required", "min:20", "max:1200"])
+    event_date: Date! @rules(apply: ["required"])
+    start: DateTime! @rules(apply: ["required"])
+    ends: DateTime! @rules(apply: ["required"])
+    type_id: ID! @rules(apply: ["required", "exists:activities,id"])
+    event_address: String! @rules(apply: ["required", "max:255"])
+    country: String! @rules(apply: ["required", "max:40"])
+    longitude: String! @rules(apply: ["required"])
+    latitude: String! @rules(apply: ["required"])
+    services: [ID!] @rules(apply: ["required", "exists:services,id"])
+    includes: [ID!] @rules(apply: ["required", "exists:includings,id"])
+    event_img: [Upload] @rules(apply: ["required", "mimes:jpeg,jpg,png"])
+}
+
+type EventStep1Response {
+    status: String
+    data: Event
+    media: [EventMedia]
+    message: String
+}
+
+input EventCategoryStep2Input {
+    event_id: ID @rules(apply: ["required", "exists:events,id"])
+    event_category_id: [ID]! @rules(apply: ["exists:event_categories,id"])
+    category_img: [Upload] @rules(apply: ["required", "mimes:jpeg,jpg,png|max:1500"])
+    cat_name: [String] @rules(apply: ["required", "min:2", "max:255"])
+    distance: [String] @rules(apply: ["required"])
+    age_from: [String] @rules(apply: ["required", "min:1", "max:2"])
+    age_to: [String] @rules(apply: ["required", "min:1", "max:2"])
+    cat_start: [DateTime!] @rules(apply: ["required"])
+    bib_from: [String] @rules(apply: ["required", "min:1"])
+    bib_to: [String] @rules(apply: ["required", "min:2"])
+    cat_end: [DateTime!] @rules(apply: ["required"])
+    fees: [String!] @rules(apply: ["required"])
+    start_address: [String] @rules(apply: ["required"])
+    finish_address: [String]
+    longitude_start: [String] @rules(apply: ["required"])
+    latitude_start: [String]! @rules(apply: ["required"])
+    longitude_finish: [String]
+    latitude_finish: [String]
+
+    place: [[String]] @rules(apply: ["required"])
+    prize: [[String]] @rules(apply: ["required"])
+    participant: [[ID]] @rules(apply: ["required", "exists:participants,id"])
+}
+
+type EventCategoryStep2Response {
+    status: String
+    data: [EventCategory]
+    message: String
+}
+
+input EventSponsorStep3Input {
+    event_id: ID @rules(apply: ["required", "exists:events,id"])
+    sponsor_img: [Upload!] @rules(apply: ["required", "mimes:jpeg,jpg,png"])
+}
+
+type EventSponsorStep3Response {
+    status: String
+    data: [EventMedia]
+    message: String
+}
+
+input EventDocumentStep4Input {
+    event_id: ID @rules(apply: ["required", "exists:events,id"])
+    event_doc: [Upload!] @rules(apply: ["required", "mimes:pdf|max:15000"])
+}
+
+type EventDocumentStep4Response {
+    status: String
+    data: [EventMedia]
+    message: String
+}
+
+input EventOrganizerContactStep5Input {
+    event_id: ID @rules(apply: ["required", "exists:events,id"])
+    organizer_name: String! @rules(apply: ["required"])
+    contact_name: String! @rules(apply: ["required"])
+    phone: String! @rules(apply: ["required"])
+    email: String! @rules(apply: ["required", "email"])
+    web_url: String
+    facebook: String
+    instagram: String
+    twitter: String
+    organizer_img: [Upload!] @rules(apply: ["required", "mimes:jpeg,jpg,png"])
+}
+
+type EventOrganizerContactStep5Response {
+    status: String
+    media: [EventMedia]
+    data: OrganizerContact
+    message: String
+}
+
+input EventQuestionsStepSixInput {
+    event_faq_id: [ID] @rules(apply: ["exists:event_faqs,id"])
+    event_id: ID! @rules(apply: ["required", "exists:events,id"])
+    question: [String!] @rules(apply: ["required", "min:2", "max:255"])
+    answer: [String!] @rules(apply: ["required", "min:2", "max:255"])
+}
+
+type EventQuestionsStepSixResponse {
+    status: String
+    data: [EventFaq]
+    message: String
+}
+
+input CompanyInput {
+    event_organizer: String! @rules(apply: ["required", "min:2", "max:255"])
+    contact_person: String! @rules(apply: ["required", "min:2", "max:255"])
+    mobile: String! @rules(apply: ["required", "string", "min:11"])
+    iban: String @rules(apply: ["string", "min:16", "max:25"]) @validator
+    address: String @rules(apply: ["max:50"])
+    logo: Upload @rules(apply: ["mimes:jpeg,jpg,png|max:2000"])
+}
+
+type CompanyResponse {
+    status: String
+    user: User
+    message: String
+}
+
+type Review {
+    id: ID
+    body: String
+    rating: String
+    status: String
+    reply: [Review] @belongsTo(relation: "replies")
+    user: User @belongsTo(relation: "users")
+    created_at: DateTime
+    updated_at: DateTime
+}
+
+input ReviewInput {
+    event_id: ID! @rules(apply: ["required", "exists:events,id"])
+    rating: Int! @rules(apply: ["App\\Rules\\ReviewCreateRule"])
+    body: String! @rules(apply: ["required", "min:2", "max:400"])
+}
+
+type ReviewResponse {
+    status: String
+    message: String
+    data: Review
+}
+
+input ReviewApproveInput {
+    review_id: ID! @rules(apply: ["required", "exists:reviews,id"])
+}
+
+type ReviewApproveResponse {
+    status: String
+    message: String
+    data: Review
+}
+
+input ReviewReplyInput {
+    review_id: ID! @rules(apply: ["required", "exists:reviews,id"])
+    body: String! @rules(apply: ["required", "min:2", "max:400"])
+}
+
+input DiscountInput {
+    code_id: [ID]! @rules(apply: ["required", "exists:discounts,id"])
+    event_id: ID! @rules(apply: ["required", "exists:events,id"])
+    limit: [Int!] @rules(apply: ["required", "min:1", "max:3"])
+    code: [String!] @rules(apply: ["unique:discounts,code"])
+    discount: [Int!] @rules(apply: ["required", "min:1", "max:2"])
+    valid_from: [DateTime!] @rules(apply: ["required"])
+    valid_to: [DateTime!] @rules(apply: ["required"])
+}
+
+type EventDiscountResponse {
+    status: String
+    message: String
+    data: [Discount]
+}
+
+type DiscountCheckResponse {
+    status: String
+    data: Discount
+    message: String
+}
+
+type PublishEventResponse {
+    status: String
+    message: String
+    data: Event
+}
+
+input PublishEventInput {
+    event_id: ID! @rules(apply: ["required", "exists:events,id"])
+}
+
+input OrderInput {
+    category_id: [ID!]!
+        @rules(apply: ["required", "exists:event_categories,id"])
+    price: [String]! @rules(apply: ["required", "max:7"])
+    currency: String! @rules(apply: ["required", "max:10"])
+    discount_code: String @rules(apply: [ "max:12"])
+    gift: [Boolean]! @rules(apply: ["required"])
+}
+
+type OrderResponse {
+    status: String
+    message: String
+    data: Order
+}
+
+input AthleteAccountInput {
+    first_name: String! @rules(apply: ["required"])
+    last_name: String @rules(apply: ["required"])
+    mobile: String @rules(apply: ["required"])
+    dob: Date! @rules(apply: ["required"])
+    gender: Boolean! @rules(apply: ["required"])
+    city: String
+    avatar: Upload @rules(apply: ["mimes:jpeg,jpg,png|max:2000"])
+    nationality: String
+    residency: String
+    address: String
+    shirt_size: String
+    champion_chip: String
+    pro_chip: String
+}
+
+type AthleteAccountResponse {
+    user: User
+    message: String
+    status: String
+}
+
+enum EventStatusEnum {
+    PENDING @enum(value: "pending")
+    PUBLISHED @enum(value: "published")
+    DRAFT @enum(value: "draft")
+    POSTPONED @enum(value: "postponed")
+    NEWDATE @enum(value: "newdate")
+}
+
+input EmergencyInput {
+    first_name: String! @rules(apply: ["required", "min:2", "max:20"])
+    last_name: String! @rules(apply: ["required", "min:2", "max:20"])
+    email: String! @rules(apply: ["required", "email"])
+    mobile: String! @rules(apply: ["required", "min:11", "max:11"])
+    medical_status: Boolean! @rules(apply: ["required"])
+    medical_description: String @rules(apply: ["min:2", "max:255"])
+}
+
+input WalletInput {
+    card_number: String! @rules(apply: ["required", "min:16", "max:16"])
+    date: String! @rules(apply: ["required", "min:5", "max:5"])
+    cvc: String! @rules(apply: ["required", "min:3", "max:3"])
+    first_name: String! @rules(apply: ["required", "min:2", "max:20"])
+    last_name: String! @rules(apply: ["required", "min:2", "max:20"])
+    country: String! @rules(apply: ["required", "min:2", "max:25"])
+    city: String! @rules(apply: ["required", "min:2", "max:255"])
+    address: String! @rules(apply: ["required", "min:4", "max:255"])
+}
+
+type totalIncomeResponse {
+    total_income: String
+}
+
+input UserListInput {
+    ByUserType: EnumUserByTYpe!
+    search: String
+    byStatus: EnumUserByStatus
+    byLastDays: EnumUserListByDays
+    registered_from: Date
+    registered_to: Date
+}
+
+enum EnumUserByStatus {
+    ACTIVE @enum(value: "active")
+    INACTIVE @enum(value: "inactive")
+}
+
+enum EnumUserByTYpe {
+    USER @enum(value: "user")
+    ORGANIZER @enum(value: "organizer")
+}
+enum EnumUserListByDays {
+    LAST_7_DAYS @enum(value: "7")
+    LAST_14_DAYS @enum(value: "14")
+    LAST_30_DAYS @enum(value: "30")
+    LAST_90_DAYS @enum(value: "90")
+}
+
+input PasswordLessLogIn {
+    user_id: ID! @rules(apply: ["required", "exists:users,id"])
+}
+
+type PasswordLessLogInResponse {
+    access_token: String
+    token_type: String
+    user: User
+}
+
+extend type Mutation @guard(with: "api") {
+    passwordLessLogin(
+        input: PasswordLessLogIn! @spread
+    ): PasswordLessLogInResponse
+        @field(resolver: "Admin\\UserMutator@passwordLessLogin")
+}
+
+input OrderListInput {
+    search: String
+    byStatus: EnumOrderByStatus
+    byLastDays: EnumUserListByDays
+    date_from: Date
+    date_to: Date
+}
+
+enum EnumOrderByStatus {
+    PAID @enum(value: "paid")
+    REFUND @enum(value: "refunded")
+}
+
+enum EnumUserListByDays {
+    LAST_7_DAYS @enum(value: "7")
+    LAST_14_DAYS @enum(value: "14")
+    LAST_30_DAYS @enum(value: "30")
+    LAST_90_DAYS @enum(value: "90")
+}
