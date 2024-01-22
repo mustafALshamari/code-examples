@@ -26,7 +26,7 @@ Our platform revolves around the belief that the most enriching experiences aris
 
 2. **Content-Hub:**
    - Description: Content-hub serves as a central hub connecting multiple services and offering APIs to construct XML books for the Code Standards-Building and Safety             domain. Utilizing the Content-api streamlines the process, making it easier for authors to update Code Standard books and providing the flexibility to modify content          efficiently.
-   - Technologies Used: NodeJs, ExpressJs , ReactJs, Docker , Microservices , Prisma , Postgre , OpenAPI
+   - Technologies Used: NodeJs, ExpressJs , ReactJs, Docker , Microservices , Prisma, CI/CD, Jenkins , AWS buckets, Postgre , OpenAPI
    - repo : https://github.com/mustafALshamari/code-examples/tree/main/content-hub
 
 
