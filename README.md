@@ -23,11 +23,10 @@ Our platform revolves around the belief that the most enriching experiences aris
    - Technologies Used: PHP/laravel , ReacJs, SqlDB , Graphql , Docker
    - Url https://meraan.com/
 
-2. **Project Name 2:**
-   - Description: Brief overview of the project.
-   - Technologies Used: List of technologies and programming languages involved.
+2. **Content-Hub:**
+   - Description: Content-hub serves as a central hub connecting multiple services and offering APIs to construct XML books for the Code Standards-Building and Safety             domain. Utilizing the Content-api streamlines the process, making it easier for authors to update Code Standard books and providing the flexibility to modify content          efficiently.
+   - Technologies Used: NodeJs, ExpressJs , ReactJs, Docker , Microservices , Prisma , Postgre , OpenAPI 
 
-(Add more projects as needed)
 
 ## Usage
 
@@ -35,10 +34,6 @@ Feel free to explore the code snippets and files available in this repository. W
 
 ## Contact
 
-If you have any questions or inquiries, please feel free to contact me:
-
-- Email: your.email@example.com
-- LinkedIn: [Your LinkedIn Profile](https://www.linkedin.com/in/yourusername/)
-- Website: [Your Portfolio Website](https://www.yourportfolio.com)
+If you have any questions or inquiries, please feel free to contact me.
 
 Thank you for visiting my portfolio repository!
