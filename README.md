@@ -21,7 +21,7 @@ MERAAN is a cutting-edge platform at the intersection of Laravel, React, and Gra
 Our platform revolves around the belief that the most enriching experiences arise from shared recommendations. Within our vibrant community, individuals passionately contribute event reviews and captivating photos, empowering others to discover their ideal races.
 
    - Technologies Used: PHP/laravel , ReacJs, SqlDB , Graphql , Docker
-   - Url https://meraan.com/
+   - url https://meraan.com/
    - repo: https://github.com/mustafALshamari/code-examples/tree/main/meraan.com
 
 2. **Content-Hub:**
@@ -32,7 +32,8 @@ Our platform revolves around the belief that the most enriching experiences aris
 3. **Horsley.cloud:**
    - Description: Horsley.cloud : Horsley.cloud is an advanced trading tool designed for Binance cryptocurrency trading. This automated system empowers experts by allowing them to set specific parameters, such as the amount available in their Binance account, desired trading amounts, and algorithm preferences. Once configured, the tool autonomously executes buy and sell orders, optimizing for profit. Additionally, it provides real-time monitoring of the selected currency's current market price. The backend has been entirely developed by Me, and certain aspects of the frontend have been implemented by Me.
    - Technologies Used: NodeJs, ExpressJs , ReactJs, Docker , firebase (firestone, real time DB and Auth) binance sockets and js lib 
-   - repo :
+   - repo :https://github.com/mustafALshamari/code-examples/tree/main/horsley
+   - url: https://horsley.cloud/
 
 
 ## Usage
