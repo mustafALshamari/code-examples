@@ -35,7 +35,7 @@ This repository includes samples of code and files derived from different projec
    - **repo** : https://github.com/mustafALshamari/code-examples/tree/main/content-hub
 
 4. **Horsley.cloud:**
-   **Dvelopment Year :2022, 2023**
+   **Dvelopment Year :2020, 2021**
 
    - Description: Horsley.cloud : Horsley.cloud is an advanced trading tool designed for Binance cryptocurrency trading. This automated system empowers experts by allowing them to set specific parameters, such as the amount available in 
      their Binance account, desired trading amounts, and algorithm preferences. Once configured, the tool autonomously executes buy and sell orders, optimizing for profit. Additionally, it provides real-time monitoring of the selected 
